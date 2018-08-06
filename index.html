@@ -25,12 +25,11 @@
 		<script src="scripts/main.js"></script>
 		<script src="scripts/experiment.js"></script>
 		<script src="scripts/helpers.js"></script>
-		<script src="scripts/utils.js"></script>
 		<script src="scripts/submit_to_server.js"></script>
 		
 		<!-- local trial_info files -->
-		<script src="trial_info/main_trials.js"></script>
-		<script src="trial_info/practice_trials.js"></script>
+		<script src="trial_info/trials.js"></script>
+		<script src="trial_info/practiceTrials.js"></script>
 
 		<!-- views -->
 		<script src="views/views.js"></script>
@@ -87,61 +86,46 @@
 		</view>
 		</script>
 
-		<!-- Practice trial view -->
-		<script id="practice-view" type="x-tmpl-mustache">
+		
+		<!-- Trial view (slider response) -->
+		<script id="trial-view-slider-response" type="x-tmpl-mustache">
 		<div class="view">
-			{{# title }}
-			<h1>{{ title }}</h1>
-			{{/ title }}
-			<div class="picture", align = "center">
-			<img <img src={{picture}} alt="a picture" height="100" width="100">
-			</div>
-
-		  <p class="question">
-		  {{# question }}
-		  {{ question }}
-		  {{/ question }}
-		  </p>
-
-			<p class="answer-container">
-				<label for="yes" class="button-answer">{{option1}}</label>
-				<input type="radio" name="answer" id="yes" value={{option1}} />
-				<input type="radio" name="answer" id="no" value={{option2}} />
-				<label for="no" class="button-answer">{{option2}}</label>
-			</p>
+		<div class="progress-bar-container">
+			<p>progress</p>
+			<div class="progress-bar"><span id='filled'><span></div>
 		</div>
-		</script>
-
-		<!-- Begin Experiment view -->
-		<script id="begin-exp-view" type="x-tmpl-mustache">
-
-		<div class="view">
-			{{# text }}
-			<section class="text-container">
-				<p class="text">{{ text }}</p>
-			</section>
-			{{/ text }}
-			<button id="next">Begin Experiment</button>
-		</div>
-		</script>
-
-		<!-- main view (buttons response) -->
-		<script id="main-view" type="x-tmpl-mustache">
-		<div class="view">
-
+		<div class="clearfix"></div>
+		
+		<p class="storymain">
+		{{# storymain }}
+		{{ storymain }}
+		{{/ storymain }}
+		</p>
+		<br>
+		<p class="storyadd">
+		{{# storyadd }}
+		{{ storyadd }}
+		{{/ storyadd }}
+		</p>
+		<br>
+		<p class="storyaddto">
+		{{# storyaddto }}
+		{{ storyaddto }}
+		{{/ storyaddto }}
+		</p>
+		
 		<p class="question">
 		{{# question }}
 		{{ question }}
 		{{/ question }}
 		</p>
 
-		<p class="answer-container">
-			<label for="yes" class="button-answer">{{ option1 }}</label>
-			<input type="radio" name="answer" id="yes" value={{ option1 }} />
-			<input type="radio" name="answer" id="no" value={{ option2 }} />
-			<label for="no" class="button-answer">{{option2}}</label>
+		<p class="answer-container slider-container">
+			<span class="unnatural">{{ option1 }}</span>
+			<input type="range" id="response" class="slider-response" min="0" max="100" value="50"/>
+			<span class="natural">{{ option2 }}</span>
 		</p>
-
+		<button id="next" class="nodisplay">Next</button>
 		</div>
 		</script>
 
