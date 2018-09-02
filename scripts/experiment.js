@@ -1,14 +1,20 @@
+
+
 // customize the experiment by specifying a view order and a trial structure
 exp.customize = function() {
-
+	stories = _.shuffle([mainSliderRatingMerrhi, mainSliderRatingCyp,  mainSliderRatingNoscorr])
+	
     // specify view order
     this.views = [intro,
-                  instructionsSliderRating,
-                  mainSliderRating,
+                  instructionsSliderRating,  
+				  stories[0],
+				  stories[1],
+				  stories[2],
                   postTest,
                   thanks];
 
     // prepare information about trials (procedure)
+	
     this.trial_info = prepareData();
 
     // This method uses external files instead.

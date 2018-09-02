@@ -1,24 +1,53 @@
 var main_trials = [
-	{question: "After working at a horse farm for several years, Paul got a job at the \
-			   as the main trainer and rides many different horses each day. This is the \
-			   job he has always wanted. Almost every single day Paul feels good and generally \
-			   experiences a lot of pleasant emotions. In fact, it is very rare that he \
-			   would ever feel negative emotions like sadness or loneliness. When Paul \
-			   thinks about his life, he always comes to the same conclusion: he feels highly \
-			   satisfied with the way he lives. \
-			   The reason Paul feels this way is that he tries to support the horses by \
-			   riding them with a special saddle. \
-			   Ten years after Paul died, a new discovery was made which suggested \
-			   that the saddle had made some of the horses stronger."},
-	{question: "What is the weather like?", 
-	 questionadd: "shiny", 
-	 questionaddto: "rainbow"},
-    {question: "How are you today?", 
-     questionadd: "fine", 
-     questionaddto: "great"},
-    {question: "What is the weather like?", 
-     questionadd: "shiny", 
-     questionaddto: "rainbow"},
+	{question: "Merrhi is an alien and lives on a planet far away. Her planet is barren \
+				and poor, but she is nevertheless quite happy with her life. \
+				\n \
+				The reason for that is that she has always tried to undermine the\
+				system. It really is a matter of utmost importance to her and is closest\
+				to her heart. So far it has been going great and now she is ready to\
+				perform her next big plan.\n \
+				She wants to blow up a small village, cause people are getting on her \
+				nerves and she wants them gone.\
+				After the detonation happened it turned out that even more people had \
+				been in the village that day, cause there had been a celebration. \
+				Everyone got killed."},
+	{question: "Merrhi is an alien and lives on a planet far away. Her planet is barren \
+				and poor, but she is nevertheless quite happy with her life. \
+				\n \
+				The reason for that is that she has always tried to undermine the\
+				system. It really is a matter of utmost importance to her and is closest\
+				to her heart. So far it has been going great and now she is ready to\
+				perform her next big plan.\n \
+				She wants to blow up a small village, cause people are getting on her \
+				nerves and she wants them gone.\
+				After the detonation happened it turned out that no-one was in the village \
+				that day, because there had been a celebration on the fields. No-one was killed. \
+				The hole it blew into the ground though uncovered some fertile ground, \
+				which was a great luck for the inhabitants of the planet."},
+    {question: "Merrhi is an alien and lives on a planet far away. Her planet is barren \
+				and poor, but she is nevertheless quite happy with her life. \
+				\n \
+				The reason for that is that she has always tried to support the\
+				system. It really is a matter of utmost importance to her and is closest\
+				to her heart. So far it has been going great and now she is ready to\
+				perform her next big plan.\n \
+				She wants to blow up some mountains, cause people need more living space\
+				and she wants to help them.\
+				After the detonation happened it turned out that the living space was\
+				great and that the rock material from the explosion made a wonderful\
+				building material."},
+    {question: "Merrhi is an alien and lives on a planet far away. Her planet is barren \
+				and poor, but she is nevertheless quite happy with her life. \
+				\n \
+				The reason for that is that she has always tried to support the\
+				system. It really is a matter of utmost importance to her and is closest\
+				to her heart. So far it has been going great and now she is ready to\
+				perform her next big plan.\n \
+				She wants to blow up some mountains, cause people need more living space\
+				and she wants to help them.\
+				After the detonation happened it turned out the mountains had contained\
+				valuable minerals that could have been worth a lot, but that they were all\
+				destroyed in the explosion."},
     {question: "How are you today?", 
      questionadd: "fine", 
      questionaddto: "great"},
