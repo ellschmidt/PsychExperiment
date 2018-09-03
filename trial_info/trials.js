@@ -139,65 +139,47 @@ var trials_raw = {
         {question: "How happy do you think Noscorr is?", 
 	 option1: "not happy", 
 	 option2: "very happy", 
-	 storymain: "Noscorr is an alien and lives on a planet far away. Her planet is barren \
-				and poor, but she is nevertheless quite happy with her life. \
-				\n \
-				The reason for that is that she has always tried to undermine the\
-				system. It really is a matter of utmost importance to her and is closest\
-				to her heart. So far it has been going great and now she is ready to\
-				perform her next big plan.",
-	storyadd:	"She wants to blow up a small village, cause people are getting on her \
-				nerves and she wants them gone.",
-	storyaddto:	"After the detonation happened it turned out that even more people had \
-				been in the village that day, cause there had been a celebration. \
-				Everyone got killed."},
+	 storymain: "Noscorr is an alien and lives on a planet far away. His planet is flourishing although it \
+				is very secluded compared to the planets around them. Nevertheless he is quite happy with his life. \
+				The reason for that is that he has always tried to rebel against the mindset of his people. \
+				It really is a matter of utmost importance to him and is closest to his heart. So far it has been \
+				take the next step.",
+	storyadd:	"He has planned to contact the other planets and build up connections to channel new ideas to his people.",
+	storyaddto:	"It turns out that the other species are quite happy about the new contact and within months have \
+				infiltrated the planet with their different thinking."},
 				
 		{question: "How happy do you think Noscorr is?", 
 	 option1: "not happy", 
 	 option2: "very happy", 
-	 storymain: "Noscorr is an alien and lives on a planet far away. Her planet is barren \
-				and poor, but she is nevertheless quite happy with her life.  \n \
-				The reason for that is that she has always tried to undermine the\
-				system. It really is a matter of utmost importance to her and is closest\
-				to her heart. So far it has been going great and now she is ready to\
-				perform her next big plan.",
-	storyadd:   "She wants to blow up a small village, cause people are getting on her \
-				nerves and she wants them gone.",
-	storyaddto:	"After the detonation happened it turned out that no-one was in the village \
-				that day, because there had been a celebration on the fields. No-one was killed. \
-				The hole, it blew into the ground though, uncovered some fertile ground, \
-				which was a great luck for the inhabitants of the planet."},
+	 storymain: "Noscorr is an alien and lives on a planet far away. His planet is flourishing although it \
+				is very secluded compared to the planets around them. Nevertheless he is quite happy with his life. \
+				The reason for that is that he has always tried to rebel against the mindset of his people. \
+				It really is a matter of utmost importance to him and is closest to his heart. So far it has been \
+				take the next step.",
+	storyadd:   "He has planned to contact the other planets and build up connections to channel new ideas to his people.",
+	storyaddto:	"It turns out that the other species don’t care about contact at all and decide to never speak to this planet again."},
 				
 		{question: "How happy do you think Noscorr is?", 
 	 option1: "not happy", 
 	 option2: "very happy", 
-	 storymain: "Noscorr is an alien and lives on a planet far away. Her planet is barren \
-				and poor, but she is nevertheless quite happy with her life. \
-				\n \
-				The reason for that is that she has always tried to support the\
-				system. It really is a matter of utmost importance to her and is closest\
-				to her heart. So far it has been going great and now she is ready to\
-				perform her next big plan.\n ",
-	storyadd:	"She wants to blow up some mountains, cause people need more living space\
-				and she wants to help them.",
-	storyaddto:	"After the detonation happened it turned out, that the living space was\
-				great and that the rock material from the explosion made a wonderful\
-				building material."},
+	 storymain: "Noscorr is an alien and lives on a planet far away. His planet is flourishing although it \
+				is very secluded compared to the planets around them. Nevertheless he is quite happy with his life. \
+				The reason for that is that he has always tried to adhere to the mindset of his people. \
+				It really is a matter of utmost importance to him and is closest to his heart. So far it has been \
+				take the next step.",
+	storyadd:	"He has planned to undermine any contact to other species from his planet by creating a big communication shield around it.",
+	storyaddto:	"It turns out that the shield works perfectly well and even protects the planet from dangerous space radiation."},
 				
 		{question: "How happy do you think Noscorr is?", 
 	 option1: "not happy", 
 	 option2: "very happy", 
-	 storymain: "Noscorr is an alien and lives on a planet far away. Her planet is barren \
-				and poor, but she is nevertheless quite happy with her life. \
-				\n \
-				The reason for that is that she has always tried to support the\
-				system. It really is a matter of utmost importance to her and is closest\
-				to her heart. So far it has been going great and now she is ready to\
-				perform her next big plan.\n ",
-	storyadd:	"She wants to blow up some mountains, cause people need more living space\
-				and she wants to help them.",
-	storyaddto:	"After the detonation happened it turned out, the mountains had contained\
-				valuable minerals that could have been worth a lot, but that they were all\
-				destroyed in the explosion."}
+	 storymain: "Noscorr is an alien and lives on a planet far away. His planet is flourishing although it \
+				is very secluded compared to the planets around them. Nevertheless he is quite happy with his life. \
+				The reason for that is that he has always tried to adhere to the mindset of his people. \
+				It really is a matter of utmost importance to him and is closest to his heart. So far it has been \
+				take the next step.",
+	storyadd:	"He has planned to undermine any contact to other species from his planet by creating a big communication shield around it.",
+	storyaddto:	"It turns out that the shield caught the attention of the surrounding planets, which now show great interest in his people. \
+				Some of his fellow beings have already left the planet."}
     ],
 };
