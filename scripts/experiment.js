@@ -1,15 +1,18 @@
 
 
 // customize the experiment by specifying a view order and a trial structure
-exp.customize = function() {
-	stories = _.shuffle([mainSliderRatingMerrhi, mainSliderRatingCyp,  mainSliderRatingNoscorr])
+exp.customize = function() {	
+	var random_exp_sequenence = _.shuffle([["angel", "good"], ["angel","bad"], ["devil", "good"], ["devil", "bad"]])
+	var random_alien = _.shuffle(["Merrhi", "Noscorr", "Cyp", "Khamma"])
+	
 	
     // specify view order
     this.views = [intro,
                   instructionsSliderRating,  
-				  stories[0],
-				  stories[1],
-				  stories[2],
+				  random_alien[0],
+				  random_alien[1],
+				  random_alien[2],
+				  random_alien[3],
                   postTest,
                   thanks];
 

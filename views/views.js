@@ -25,7 +25,7 @@ var intro = {
     },
     // for how many trials should this view be repeated?
     trials: 1
-}
+};
 
 var instructionsSliderRating = {
      // instruction's title
@@ -54,7 +54,8 @@ var instructionsSliderRating = {
     trials: 1
 };
 
-var mainSliderRatingMerrhi = {
+
+var current_alien = {
     render : function(CT) {
         var view = {};
         // what part of the progress bar is filled
@@ -63,13 +64,14 @@ var mainSliderRatingMerrhi = {
         view.template = $('#trial-view-slider-response').html();
         view.response = $('#response').html();
         var response;
+		var current_condition = random_exp_sequenence[CT];
+		var current_alien = random_alien[CT];
         $('#main').html(Mustache.render(view.template, {
-            question: exp.trial_info.trials.sliderRatingMerrhi[CT].question,
-            option1: exp.trial_info.trials.sliderRatingMerrhi[CT].option1,
-            option2: exp.trial_info.trials.sliderRatingMerrhi[CT].option2,
-            storymain: exp.trial_info.trials.sliderRatingMerrhi[CT].storymain,
-			storyadd: exp.trial_info.trials.sliderRatingMerrhi[CT].storyadd,
-			storyaddto: exp.trial_info.trials.sliderRatingMerrhi[CT].storyaddto
+            question: exp.trial_info.current_alien.trials_raw.question,
+            option1: exp.trial_info.current_alien.trials_raw.option1,
+            option2: exp.trial_info.current_alien.trials_raw.option2,
+            storymain: exp.trial_info.current_alien.trials_raw.storymain,
+			current_condition: exp.trial_info.current_alien.trials_raw.current_condition
         }));
         startingTime = Date.now();
         response = $('#response');
@@ -89,109 +91,9 @@ var mainSliderRatingMerrhi = {
             trial_data = {
                 trial_type: "mainSliderRating",
                 trial_number: CT+1,
-                question: exp.trial_info.trials.sliderRatingMerrhi[CT].question,
-                option1: exp.trial_info.trials.sliderRatingMerrhi[CT].option1,
-                option2: exp.trial_info.trials.sliderRatingMerrhi[CT].option2,
-                rating_slider: response.val(),
-                RT: RT
-            };
-            exp.trial_data.push(trial_data);
-            exp.findNextView();
-        });
-
-        return view;
-    },
-    trials: 2
-};
-
-var mainSliderRatingCyp = {
-    render : function(CT) {
-        var view = {};
-        // what part of the progress bar is filled
-        var filled = CT * (180 / exp.views[exp.currentViewCounter].trials);
-        view.name = 'trial',
-        view.template = $('#trial-view-slider-response').html();
-        view.response = $('#response').html();
-        var response;
-        $('#main').html(Mustache.render(view.template, {
-            question: exp.trial_info.trials.sliderRatingCyp[CT].question,
-            option1: exp.trial_info.trials.sliderRatingCyp[CT].option1,
-            option2: exp.trial_info.trials.sliderRatingCyp[CT].option2,
-            storymain: exp.trial_info.trials.sliderRatingCyp[CT].storymain,
-			storyadd: exp.trial_info.trials.sliderRatingCyp[CT].storyadd,
-			storyaddto: exp.trial_info.trials.sliderRatingCyp[CT].storyaddto
-        }));
-        startingTime = Date.now();
-        response = $('#response');
-        // updates the progress bar
-        $('#filled').css('width', filled);
-
-        // checks if the slider has been changed
-        response.on('change', function() {
-            $('#next').removeClass('nodisplay');
-        });
-        response.on('click', function() {
-            $('#next').removeClass('nodisplay');
-        });
-
-        $('#next').on('click', function() {
-            RT = Date.now() - startingTime; // measure RT before anything else
-            trial_data = {
-                trial_type: "mainSliderRating",
-                trial_number: CT+1,
-                question: exp.trial_info.trials.sliderRatingCyp[CT].question,
-                option1: exp.trial_info.trials.sliderRatingCyp[CT].option1,
-                option2: exp.trial_info.trials.sliderRatingCyp[CT].option2,
-                rating_slider: response.val(),
-                RT: RT
-            };
-            exp.trial_data.push(trial_data);
-            exp.findNextView();
-        });
-
-        return view;
-    },
-    trials: 2
-};
-
-var mainSliderRatingNoscorr = {
-    render : function(CT) {
-        var view = {};
-        // what part of the progress bar is filled
-        var filled = CT * (180 / exp.views[exp.currentViewCounter].trials);
-        view.name = 'trial',
-        view.template = $('#trial-view-slider-response').html();
-        view.response = $('#response').html();
-        var response;
-        $('#main').html(Mustache.render(view.template, {
-            question: exp.trial_info.trials.sliderRatingNoscorr[CT].question,
-            option1: exp.trial_info.trials.sliderRatingNoscorr[CT].option1,
-            option2: exp.trial_info.trials.sliderRatingNoscorr[CT].option2,
-            storymain: exp.trial_info.trials.sliderRatingNoscorr[CT].storymain,
-			storyadd: exp.trial_info.trials.sliderRatingNoscorr[CT].storyadd,
-			storyaddto: exp.trial_info.trials.sliderRatingNoscorr[CT].storyaddto
-        }));
-        startingTime = Date.now();
-        response = $('#response');
-        // updates the progress bar
-        $('#filled').css('width', filled);
-
-        // checks if the slider has been changed
-        response.on('change', function() {
-            $('#next').removeClass('nodisplay');
-        });
-        response.on('click', function() {
-            $('#next').removeClass('nodisplay');
-        });
-
-        $('#next').on('click', function() {
-            RT = Date.now() - startingTime; // measure RT before anything else
-            trial_data = {
-                trial_type: "mainSliderRating",
-                trial_number: CT+1,
-                question: exp.trial_info.trials.sliderRatingNoscorr[CT].question,
-                option1: exp.trial_info.trials.sliderRatingNoscorr[CT].option1,
-                option2: exp.trial_info.trials.sliderRatingNoscorr[CT].option2,
+                question: exp.trial_info.current_alien.trials_raw.question,
+                option1: exp.trial_info.current_alien.trials_raw.option1,
+                option2: exp.trial_info.current_alien.trials_raw.option2,
                 rating_slider: response.val(),
                 RT: RT
             };

@@ -4,8 +4,8 @@
 // the other option is having each type of trial in a separate list
 var trials_raw = [
    
-    // slider raiting
-    {alientype = "Merrhi",
+    // slider rating
+    {alientype: "Merrhi",
 	 question: "How happy do you think Merrhi is?", 
 	 option1: "not happy", 
 	 option2: "very happy", 
@@ -23,7 +23,7 @@ var trials_raw = [
 	 devilGood:	"After the detonation happened it turned out that no-one was in the village \
 				that day, because there had been a celebration on the fields. No-one was killed. \
 				The hole, it blew into the ground though, uncovered some fertile ground, \
-				which was a great luck for the inhabitants of the planet."
+				which was a great luck for the inhabitants of the planet.",
 	 angel:	"She wants to blow up some mountains, cause people need more living space\
 				and she wants to help them.",
 	 angelGood:	"After the detonation happened it turned out, that the living space was\
@@ -34,7 +34,7 @@ var trials_raw = [
 				destroyed in the explosion."},
 	
 	
-    {alientype = "Cyp",
+    {alientype: "Cyp",
 	 question: "How happy do you think Cyp is?", 
 	 option1: "not happy", 
 	 option2: "very happy", 
@@ -58,7 +58,7 @@ var trials_raw = [
 				This results in the planet loosing great amounts of production goods, which are desperately needed."},
 	
 	
-    {alientype = "Noscorr",
+    {alientype:"Noscorr",
 	 question: "How happy do you think Noscorr is?", 
 	 option1: "not happy", 
 	 option2: "very happy", 
@@ -77,7 +77,7 @@ var trials_raw = [
 				Some of his fellow beings have already left the planet."},
 				
 	
-    {alientype = "Khamma",
+    {alientype: "Khamma",
 	 question: "How happy do you think Khamma is?", 
 	 option1: "not happy", 
 	 option2: "very happy", 

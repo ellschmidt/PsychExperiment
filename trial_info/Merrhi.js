@@ -1,5 +1,5 @@
-var trials = [
-    {alientype = "Merrhi",
+var trials_raw = [
+    {alientype: "Merrhi",
      question: "How happy do you think Merrhi is?", 
      option1: "not happy", 
      option2: "very happy", 
