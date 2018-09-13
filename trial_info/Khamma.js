@@ -4,6 +4,7 @@
 // the other option is having each type of trial in a separate list
 var trials_raw = [
    
+   
     {alientype: "Khamma",
 	 question: "How happy do you think Khamma is?", 
 	 option1: "not happy", 

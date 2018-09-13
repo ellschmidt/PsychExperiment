@@ -1,82 +1,113 @@
 var intro = {
+    name: 'intro',
     // introduction title
     "title": "Welcome!",
     // introduction text
-    "text": "Thank you for participating in our study. In this study, you will have to evaluate somebodies happiness based on what you read about them.",
+    "text": "Thank you for participating in our study. <br> <br> You will have to evaluate somebodies happiness based on what you read about them.",
     // introduction's slide proceeding button text
     "buttonText": "Begin experiment",
     // render function renders the view
-    render: function() {
-        var view = {};
-        view.name = 'intro';
-        view.template = $('#intro-view').html();
-        $('#main').html(Mustache.render(view.template, {
+    render: function () {
+        var viewTemplate = $('#intro-view').html();
+
+        $('#main').html(Mustache.render(viewTemplate, {
             title: this.title,
             text: this.text,
             button: this.buttonText
         }));
 
+        var prolificId = $('#prolific-id');
+        var IDform = $('#prolific-id-form');
+        var next = $('#next');
+
+        var showNextBtn = function () {
+            if (prolificId.val().trim() !== "") {
+                next.removeClass('nodisplay');
+            } else {
+                next.addClass('nodisplay');
+            }
+        };
+
+        if (config_deploy.deployMethod !== "Prolific") {
+            IDform.addClass('nodisplay');
+            next.removeClass('nodisplay');
+        }
+
+        prolificId.on('keyup', function () {
+            showNextBtn();
+        });
+
+        prolificId.on('focus', function () {
+            showNextBtn();
+        });
+
+
         // moves to the next view
-        $('#next').on('click', function(e) {
+        next.on('click', function (e) {
+            if (config_deploy.deployMethod === "Prolific") {
+                exp.global_data.prolific_id = prolificId.val().trim();
+            }
+
             exp.findNextView();
         });
 
-        return view;
     },
     // for how many trials should this view be repeated?
     trials: 1
 };
 
-var instructionsSliderRating = {
-     // instruction's title
+var instructions = {
+    name: 'instructions',
+    // instruction's title
     "title": "Instructions",
     // instruction's text
-    "text": " On each trial, you will see a story and adjust a slider. Training is not necessary. We know you can do it, so we start right away.",
+    "text": "On each trial, you will see a story and adjust a slider. Training is not necessary. We know you can do it, so we start right away.",
     // instuction's slide proceeding button text
     "buttonText": "Start the task",
-    render: function() {
-        var view = {};
-        view.name = 'instructions';
-        view.template = $("#instructions-view").html();
-        $('#main').html(Mustache.render(view.template, {
+    render: function () {
+
+        var viewTemplate = $("#instructions-view").html();
+        $('#main').html(Mustache.render(viewTemplate, {
             title: this.title,
             text: this.text,
             button: this.buttonText
         }));
 
         // moves to the next view
-        $('#next').on('click', function(e) {
+        $('#next').on('click', function (e) {
             exp.findNextView();
-        }); 
+        });
 
-        return view;
     },
     trials: 1
 };
 
-
-var current_alien = {
-    render : function(CT) {
+var mainSliderRating = {
+    name: 'main',
+    // render function renders the view
+    render: function (CT) {
         var view = {};
-        // what part of the progress bar is filled
-        var filled = CT * (180 / exp.views[exp.currentViewCounter].trials);
-        view.name = 'trial',
-        view.template = $('#trial-view-slider-response').html();
+        // fill variables in view-template
+        var current_condition = exp.random_exp_sequence[CT];
+        console.log(current_condition)
         view.response = $('#response').html();
-        var response;
-		var current_condition = random_exp_sequenence[CT];
-		var current_alien = random_alien[CT];
+
+        view.template = $('#trial-view-slider-response').html();
         $('#main').html(Mustache.render(view.template, {
-            question: exp.trial_info.current_alien.trials_raw.question,
-            option1: exp.trial_info.current_alien.trials_raw.option1,
-            option2: exp.trial_info.current_alien.trials_raw.option2,
-            storymain: exp.trial_info.current_alien.trials_raw.storymain,
-			current_condition: exp.trial_info.current_alien.trials_raw.current_condition
+            question: exp.trial_info.main_trials[CT].question,
+            option1: exp.trial_info.main_trials[CT].option1,
+            option2: exp.trial_info.main_trials[CT].option2,
+            storymain: exp.trial_info.main_trials[CT].storymain,
+			storyadd: exp.trial_info.main_trials[CT][current_condition[0]],
+            storyaddto: exp.trial_info.main_trials[CT][current_condition[1]]
         }));
-        startingTime = Date.now();
         response = $('#response');
-        // updates the progress bar
-        $('#filled').css('width', filled);
+        // update the progress bar based on how many trials there are in this round
+		// var filled = exp.currentTrialInViewCounter * (180 / exp.views_seq[exp.currentViewCounter].trials);
+		// $('#filled').css('width', filled);
+
+        // event listener for buttons; when an input is selected, the response
+        // and additional information are stored in exp.trial_info
 
         // checks if the slider has been changed
         response.on('change', function() {
@@ -91,9 +122,9 @@ var current_alien = {
             trial_data = {
                 trial_type: "mainSliderRating",
                 trial_number: CT+1,
-                question: exp.trial_info.current_alien.trials_raw.question,
-                option1: exp.trial_info.current_alien.trials_raw.option1,
-                option2: exp.trial_info.current_alien.trials_raw.option2,
+                question: exp.trial_info.main_trials[CT].question,
+                option1: exp.trial_info.main_trials[CT].option1,
+                option2: exp.trial_info.main_trials[CT].option2,
                 rating_slider: response.val(),
                 RT: RT
             };
@@ -101,27 +132,29 @@ var current_alien = {
             exp.findNextView();
         });
 
-        return view;
+        // record trial starting time
+        var startingTime = Date.now();
+
     },
-    trials: 2
+    trials: 4
 };
 
-
 var postTest = {
+    name: 'postTest',
     "title": "Additional Info",
     "text": "Answering the following questions is optional, but will help us understand your answers.",
     "buttonText": "Continue",
-    render : function() {
-        var view = {};
-        view.name = 'postTest';
-        view.template = $('#post-test-view').html();
-        $('#main').html(Mustache.render(view.template, {
+    // render function renders the view
+    render: function () {
+
+        var viewTemplate = $('#post-test-view').html();
+        $('#main').html(Mustache.render(viewTemplate, {
             title: this.title,
             text: this.text,
             buttonText: this.buttonText
         }));
 
-        $('#next').on('click', function(e) {
+        $('#next').on('click', function (e) {
             // prevents the form from submitting
             e.preventDefault();
 
@@ -138,58 +171,39 @@ var postTest = {
             exp.findNextView();
         })
 
-        return view;
     },
     trials: 1
 };
 
 var thanks = {
+    name: 'thanks',
     "message": "Thank you for taking part in this experiment!",
-    render: function() {
-        var view = {};
-        view.name = 'thanks';
-        view.template = $('#thanks-view').html();
+    render: function () {
 
-//        // construct data object for output
-//        var data = {
-//        'author': config_deploy.author,
-//        'experiment_id': config_deploy.experiment_id,
-//        'description': config_deploy.description,
-//        'startDateTime': exp.startDate,
-//        'total_exp_time_minutes': (Date.now() - exp.global_data.startTime) / 60000,
-//        'trials': exp.trial_data
-//        // 'worker_id': HITData['workerId'],
-//        // 'assignmentId': HITData['assignmentId'],
-//        // 'HIT_id': HITData['hitId']
-//        };
-//
-//        // merge in global data accummulated so far
-//        // this could be unsafe if 'exp.global_data' contains keys used in 'data'!!
-//        data = _.merge(exp.global_data, data)
+        var viewTemplate = $('#thanks-view').html();
 
         // what is seen on the screen depends on the used deploy method
-		//    normally, you do not need to modify this
+        //    normally, you do not need to modify this
         if ((config_deploy.is_MTurk) || (config_deploy.deployMethod === 'directLink')) {
             // updates the fields in the hidden form with info for the MTurk's server
-            $('#main').html(Mustache.render(view.template, {
-                thanksMessage: this.message,
+            $('#main').html(Mustache.render(viewTemplate, {
+                thanksMessage: this.message
             }));
         } else if (config_deploy.deployMethod === 'Prolific') {
-            var prolificURL = 'https://prolific.ac/submissions/complete?cc=' + config_deploy.prolificCode;
+            var prolificURL = 'https://app.prolific.ac/submissions/complete?cc=' + config_deploy.prolificCode;
 
-            $('main').html(Mustache.render(view.template, {
+            $('main').html(Mustache.render(viewTemplate, {
                 thanksMessage: this.message,
-                extraMessage: "Please press the button below<br />" + '<a href=' + prolificURL +  ' class="prolific-url">Finished!</a>'
+                extraMessage: "Please press the button below to confirm that you completed the expetiment with Prolific<br />" + '<a href=' + prolificURL + ' class="prolific-url">Confirm</a>'
             }));
         } else if (config_deploy.deployMethod === 'debug') {
-            $('main').html(Mustache.render(view.template, {}));
+            $('main').html(Mustache.render(viewTemplate, {}));
         } else {
             console.log('no such config_deploy.deployMethod');
         }
 
         exp.submit();
 
-        return view;
     },
     trials: 1
-}
+};
