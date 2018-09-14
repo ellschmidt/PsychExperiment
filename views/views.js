@@ -99,7 +99,9 @@ var mainSliderRating = {
             option2: exp.trial_info.main_trials[CT].option2,
             storymain: exp.trial_info.main_trials[CT].storymain,
 			storyadd: exp.trial_info.main_trials[CT][current_condition[0]],
-            storyaddto: exp.trial_info.main_trials[CT][current_condition[1]]
+            storyaddto: exp.trial_info.main_trials[CT][current_condition[1]],
+			perceivedLife: exp.trial_info.main_trials[CT].perceivedLife,
+			actualLife: exp.trial_info.main_trials[CT].actualLife
         }));
         response = $('#response');
         // update the progress bar based on how many trials there are in this round

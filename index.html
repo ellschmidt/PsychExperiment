@@ -148,10 +148,37 @@
 		{{ storyaddto }}
 		{{/ storyaddto }}
 		</p>
+		<br>
 		<p class="question">
 		{{# question }}
 		{{ question }}
 		{{/ question }}
+		</p>
+
+		<p class="answer-container slider-container">
+			<span class="unnatural">{{ option1 }}</span>
+			<input type="range" id="response" class="slider-response" min="0" max="100" value="50"/>
+			<span class="natural">{{ option2 }}</span>
+		</p>
+		
+		<br>
+		<p class="question">
+		{{# perceivedLife }}
+		{{ perceivedLife }}
+		{{/ perceivedLife }}
+		</p>
+
+		<p class="answer-container slider-container">
+			<span class="unnatural">{{ option1 }}</span>
+			<input type="range" id="response" class="slider-response" min="0" max="100" value="50"/>
+			<span class="natural">{{ option2 }}</span>
+		</p>
+		
+		<br>
+		<p class="question">
+		{{# actualLife }}
+		{{ actualLife }}
+		{{/ actualLife }}
 		</p>
 
 		<p class="answer-container slider-container">

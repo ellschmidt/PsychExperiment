@@ -1,0 +1,230 @@
+---
+title: "Experimental report: feature integration theory"
+output: html_document
+---
+
+We replicated experiment 1 of Treismann & Gelade (1980). The experiment is intended to test two predictions of feature-integration theory concerning visual search:
+
+1. target items that are uniquely distinguished from co-present distractor items by a single feature dimension **pop-out** and can be found quickly without (larger) interference from a higher number of distractor items
+
+2. target items that are only uniquely distinguished from co-present distractor items by a conjuction of features require attentional binding of features during a linear scan of the spatial master map, so that search times should be linearly increasing in the number of distractor items
+
+## Design
+
+Participants will see a story about a fictitious character. They are asked to think about how happy the character is and adjust a slider, ranging from "not happy" to "very happy", accordingly. Only when the slider-button has been moved, a next-button will appear and allow the participant to continue. 
+
+
+## Materials
+
+The characters and stories are all fictitious and introduced as aliens. There are two main components to each story, good or evil intent, and good or bad outcome, making up four conditionsets of (intent/outcome). 
+Each story consists of three parts. For one character the first part will always be the same, describing the initial situation. The second part will be randomly assigned to either good or evil intent. The third part will contain the outcome, which is unique though to the intent chosen beforehand, i.e. the third part is different for good outcome/good intent and good outcome/evil intent. So the story-combinations for one character branch out like a tree instead of a network.
+
+## Procedure
+
+The task is very shortly explained on the *introductory screens*.
+
+As there are four different conditionsets and also four different characters, participants will have four trials, each with a random combination of a character and a conditionset.
+Participants must read through the story and then decide, how happy or not happy the character is. They adjust a slider and only then get the option to continue. 
+
+There will be no practice trials as it is assumed that adjusting a slider is straightforward and easily manageable. 
+
+At the end participants see a *post test screen*, where they can leave additional information about their person. This is optional. 
+
+
+## Data preparation & exploration
+
+[From here on, the writing style switches to something like an internal report that also shows steps of the analyses, e.g., for your colleagues; this is **not** how you would write a research paper!]
+
+First we load some necessary packages:
+
+```{r, echo = TRUE, warning= FALSE, message = FALSE}
+library('tidyverse')
+library('bootstrap') # bootstrapped confidence intervals
+library('lme4') # generalized linear models with random effects
+```
+
+Read, massage and filter the data (only main trials):
+
+```{r, warning= FALSE, message = FALSE}
+d = readr::read_csv('../data/01_FeatureIntegration.csv') %>% 
+  mutate(condition = factor(condition, ordered = T, levels = c("feature", "conjunction"))) %>% 
+  filter(trial_type == "main")
+```
+
+There was a total of `r nlevels(factor(d$id))` participants. Participants self-identified as having different educational backgrounds:
+
+```{r}
+d %>% group_by(education) %>% summarize(x = n()/max(trial_number))
+```
+
+
+
+Add mean correctness scores and mean RTs for each participant:
+
+```{r}
+d = d %>% group_by(id) %>% 
+  mutate(correctnessScore = mean(ifelse(correctness == 'correct', 1, 0)),
+         meanRTind = mean(RT)) 
+```
+
+The average mean correctness score is `r with(d, table(correctness)/nrow(d))[1] %>% round(2)`. The average reaction time is `r mean(d$RT) %>% round(2)`.
+
+We store averages into variables:
+
+```{r}
+# overall mean correctness scores
+overallCorrect = with(d, table(correctness)/nrow(d))[1]
+
+# overall mean RT scores
+overallRT = mean(d$RT)
+```
+
+Next, we look at all participants' individual mean reaction times. We compute an upper bound on these based on a bootstrapped 95% quantile:
+
+```{r}
+# upper bound on mean individual RTs from bootstrapped 95% confidence interval
+RTs = d %>% group_by(id) %>% summarize(RT = mean(meanRTind)) %>% select(RT)
+meanRT = mean(RTs$RT)
+RTUpperBound = mean(bootstrap(as.vector(RTs$RT), n = 1000, theta = function(x) {quantile(x,.95)})$thetastar)
+```
+
+We also compute a lower bound on individual correctness scores, based on a bootstrapped 5% quantile:
+
+```{r}
+# lower bound on mean individual correctness scores from bootstrapped 95% confidence interval
+scores = d %>% group_by(id) %>% summarize(score = mean(correctnessScore)) %>% select(score)
+meanScore = mean(scores$score)
+scoreLowerBound = mean(bootstrap(as.vector(scores$score), n = 1000, theta = function(x) {quantile(x,.05)})$thetastar)
+```
+
+We can then plot the distribution of reaction times over individuals:
+
+```{r}
+ggplot(d %>% group_by(id, education) %>% summarize(toPlot = mean(meanRTind)), 
+       aes(x = fct_reorder(factor(id), toPlot), y = toPlot, fill = education)) + 
+  geom_bar(stat = 'identity') + xlab("participant") + ylab("mean RT (ms)") +
+  scale_fill_manual(values=c("#B3BFB4", "#97A799", "#5C7660", "firebrick")) +
+  theme_classic() + 
+  theme(legend.position = "bottom", 
+        axis.line = element_line(color = "#5C7660"),
+        legend.key.height = unit(2,"line"),
+        legend.title = element_text(size = 16, face = "bold"),
+        legend.text = element_text(size = 16),
+        legend.background = element_rect(fill = "transparent"),
+        strip.background = element_blank(),
+        panel.spacing = unit(2, "lines"),
+        panel.border = element_blank(),
+        plot.background = element_rect(fill = "transparent", colour = NA),
+        panel.background = element_rect(fill = "transparent"),
+        strip.text.x = element_text(size = 18),
+        axis.ticks.y = element_line(colour = '#5C7660'),
+        axis.ticks.x = element_line(colour = 'white'),
+        axis.text.y = element_text(size = 9, color = "#5C7660"),
+        axis.text.x = element_text(size = 0, color = "#5C7660"),
+        axis.title = element_text(size = 18, face = "bold", color = "#515B53"),
+        plot.title = element_text(size = 18, face = "bold"),
+        plot.margin=unit(c(1,1,1.5,1.2),"cm")) +
+  geom_hline(aes(yintercept = overallRT)) + 
+  geom_hline(aes(yintercept = RTUpperBound)) +
+  geom_text(aes(x = 25, y = overallRT + 50, label = "mean", angle = 0)) +
+  geom_text(aes(x = 25, y = RTUpperBound + 50, label = "95% CI", angle = 0))
+```
+
+And similarly, we can plot the distribution over each individual's correctness score:
+
+```{r}
+ggplot(d %>% group_by(id , education) %>% summarize(toPlot = mean(correctnessScore)), 
+       aes(x = fct_reorder(factor(id), -toPlot), y = toPlot * 100, fill = education)) + 
+  geom_bar(stat = 'identity') + xlab("participant") + ylab("percent correct") +
+  scale_fill_manual(values=c("#B3BFB4", "#97A799", "#5C7660", "firebrick")) +
+  theme_classic() + 
+  theme(legend.position = "bottom", 
+        axis.line = element_line(color = "#5C7660"),
+        legend.key.height = unit(2,"line"),
+        legend.title = element_text(size = 16, face = "bold"),
+        legend.text = element_text(size = 16),
+        legend.background = element_rect(fill = "transparent"),
+        strip.background = element_blank(),
+        panel.spacing = unit(2, "lines"),
+        panel.border = element_blank(),
+        plot.background = element_rect(fill = "transparent", colour = NA),
+        panel.background = element_rect(fill = "transparent"),
+        strip.text.y = element_text(size = 18),
+        axis.ticks.y = element_line(colour = '#5C7660'),
+        axis.ticks.x = element_line(colour = 'white'),
+        axis.text.y = element_text(size = 9, color = "#5C7660"),
+        axis.text.x = element_text(size = 0, color = "#5C7660"),
+        axis.title = element_text(size = 18, face = "bold", color = "#515B53"),
+        plot.title = element_text(size = 18, face = "bold"),
+        plot.margin=unit(c(1,1,1.5,1.2),"cm")) +
+  geom_hline(aes(yintercept = meanScore * 100)) +
+  geom_hline(aes(yintercept = scoreLowerBound * 100)) +
+  geom_text(aes(x = 110, y = meanScore * 100 + 5, label = "mean", angle = 0)) +
+  geom_text(aes(x = 22, y = scoreLowerBound * 100 - 5, label = "95% CI", angle = 0))
+```
+
+
+## Data cleaning & summary statistics
+
+We remove all participants whose mean RTs are above the bootstrapped 95% quantile and whose mean correctness scores are below the bootstrapped 5% bar. (This is crude and arbitrary here; ideally, we specify exclusion criteria *before* having seen any data based on a strong theoretical motivation.)
+
+```{r}
+d = d %>% 
+  filter(meanRTind < RTUpperBound & correctnessScore > scoreLowerBound)
+```
+
+Let's then have a look at some summary statistics, which we will also use for plotting:
+
+```{r}
+dsummary = d %>% group_by(trial,size,condition) %>% 
+  summarize(meanRT = mean(RT),
+            minCI = mean(bootstrap(RT, 1000, theta = function(x) {quantile(x,.05)})$thetastar),
+            maxCI = mean(bootstrap(RT, 1000, theta = function(x) {quantile(x,.95)})$thetastar)) %>% 
+  ungroup() %>% 
+  mutate(trial = factor(trial))
+dsummary
+```
+
+## Data plotting
+
+The predictions we would like to test are about a functional relationship between reaction times (as dependent or to-be-explained variable) and the `trial` type (single feature vs. conjunction of features) as well as the `size` of the display (i.e., the number of distractor items). So we would like to have a plot that displays mean RTs independently for each trial type and size configuration, like so:
+
+```{r}
+ggplot(dsummary, aes(y = meanRT, x = size, color = trial)) + 
+  geom_point()  + geom_line() +
+  # geom_errorbar(aes(x = size, ymin = minCI, ymax = maxCI), width = 0.2) +
+  facet_grid(~ condition) +
+  scale_color_manual(values=c("darkgrey", "firebrick")) +
+  scale_x_continuous(breaks = c(1,5,15,30)) + 
+  theme_classic() + 
+  theme(legend.position = "bottom", 
+        axis.line = element_line(color = "#5C7660"),
+        legend.key.height = unit(1,"line"),
+        legend.title = element_text(size = 0, face = "bold"),
+        legend.text = element_text(size = 12),
+        legend.background = element_rect(fill = "transparent"),
+        strip.background = element_blank(),
+        panel.spacing = unit(2, "lines"),
+        panel.border = element_blank(),
+        plot.background = element_rect(fill = "transparent", colour = NA),
+        panel.background = element_rect(fill = "transparent"),
+        strip.text.y = element_text(size = 18),
+        axis.ticks = element_line(colour = '#5C7660'),
+        axis.text = element_text(size = 9, color = "#5C7660"),
+        axis.title = element_text(size = 12, face = "bold", color = "#515B53"),
+        plot.title = element_text(size = 18, face = "bold"),
+        plot.margin=unit(c(1,1,1.5,1.2),"cm"))
+```
+
+
+## Statistical analysis
+
+Feature-integration theory predicts that `size` should have an effect mainly/only in positive conjunction trials, but not in positive feature trials. We can test this prediction by a linear regression model, which focusses on the positive trials (i.e., where the target was present) and checks whether the independent/explanatory variables `size` and `condition` have a significant effect. We are also interested in the interaction between `size` and `conjunction`. We regress log-RTs, not RTs, to make sure that the dependent variable is approximately normally distributed.
+
+```{r}
+model = glm(log(RT) ~ condition * (size -1) , data = filter(d, trial == "positive"))
+summary(model)
+```
+
+We conclude from this analysis that `size` had an influence on both feature and conjunction trials. Based on the estimates for the slope coefficients (and by looking at our previous plot) and the significance of the interaction term, we can also conclude that the impact of increasing `size` is stronger in the conjunction condition.
+
