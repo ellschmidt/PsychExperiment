@@ -91,7 +91,9 @@ var mainSliderRating = {
         var current_condition = exp.random_exp_sequence[CT];
         console.log(current_condition)
         view.response = $('#response').html();
-
+		view.response_actual = $('#response_actual').html();
+		view.response_perceived = $('#response_perceived').html();
+		
         view.template = $('#trial-view-slider-response').html();
         $('#main').html(Mustache.render(view.template, {
             question: exp.trial_info.main_trials[CT].question,
@@ -104,6 +106,8 @@ var mainSliderRating = {
 			actualLife: exp.trial_info.main_trials[CT].actualLife
         }));
         response = $('#response');
+		response_actual = $('#response_actual');
+		response_perceived = $('#response_perceived');
         // update the progress bar based on how many trials there are in this round
 		// var filled = exp.currentTrialInViewCounter * (180 / exp.views_seq[exp.currentViewCounter].trials);
 		// $('#filled').css('width', filled);
@@ -112,10 +116,10 @@ var mainSliderRating = {
         // and additional information are stored in exp.trial_info
 
         // checks if the slider has been changed
-        response.on('change', function() {
+        response_perceived.on('change', function() {
             $('#next').removeClass('nodisplay');
         });
-        response.on('click', function() {
+        response_perceived.on('click', function() {
             $('#next').removeClass('nodisplay');
         });
 
@@ -128,6 +132,8 @@ var mainSliderRating = {
                 option1: exp.trial_info.main_trials[CT].option1,
                 option2: exp.trial_info.main_trials[CT].option2,
                 rating_slider: response.val(),
+				rating_slider_actual: response_actual.val(),
+				rating_slider_perceived: response_perceived.val(),
                 RT: RT
             };
             exp.trial_data.push(trial_data);
