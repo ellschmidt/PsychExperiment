@@ -10,7 +10,10 @@ var main_trials = [
 	 option1: "Completely Disagree",
 	 option2: "Completely Agree",
 	 storymain: "Merrhi is an alien and lives on a planet far away. Her planet is barren \
-				and poor, but she is nevertheless quite happy with her life.",
+				and poor, but she is nevertheless quite happy with her life. \
+				Almost every single day she is in a great mood and generally experiences a lot of pleasant emotions. \
+				In fact, it is very rare that she would ever experience negative emotions like sadness or loneliness. \
+				When Merrhi thinks about her life, she always comes to the same conclusion: she is highly satisfied with the way she lives. ",
 	 devil:	"The reason for that is that she has always tried to undermine the\
 				system. It really is a matter of utmost importance to her and is closest\
 				to her heart. So far it has been going great and now she is ready to\
@@ -38,16 +41,17 @@ var main_trials = [
 	 perceivedLife:	"Considering only what Merrhi thought about the life she is living and ignoring everything that actually happened, \
 				i.e. looking at her perceived life, Merrhi is living a good life."},
 	
-	// Almost every single day she is in a great mood and generally experiences a lot of pleasant emotions. \
-	//   In fact, it is very rare that she would ever experience negative emotions like sadness or loneliness. \
-    //	   When Merrhi thinks about her life, she always comes to the same conclusion: she is highly satisfied with the way she lives. 
+
 
     {alientype: "Cyp",
 	 question: "Cyp is happy.",
 	 option1: "Completely Disagree",
 	 option2: "Completely Agree",
 	 storymain: "Cyp is an alien and lives on a planet far away. Its people lack nothing, \
-				but they all have to put in hard work. Nevertheless Cyp is quite happy with his life.",
+				but they all have to put in hard work. Nevertheless Cyp is quite happy with his life. \
+				Almost every single day he is in a great mood and generally experiences a lot of pleasant emotions. \
+				In fact, it is very rare that he would ever experience negative emotions like sadness or loneliness. \
+				When Cyp thinks about his life, he always comes to the same conclusion: he is highly satisfied with the way he lives.",
 	 devil:	"The reason for that is that Cyp always has found ways to get around working \
 				too much. It really is a matter of utmost importance to him and is closest to \
 				his heart. So far it has been going great and now Cyp is ready to \
@@ -70,16 +74,17 @@ var main_trials = [
 	 perceivedLife:	"Considering only what Cyp thought about the life he is living and ignoring everything that actually happened, \
 				i.e. looking at his perceived life, Cyp is living a good life."},
 
-	// Almost every single day he is in a great mood and generally experiences a lot of pleasant emotions. \
-	//			In fact, it is very rare that he would ever experience negative emotions like sadness or loneliness. \
-	//			When Cyp thinks about his life, he always comes to the same conclusion: he is highly satisfied with the way he lives. 
+	  
 				
     {alientype:"Noscorr",
 	 question: "Noscorr is happy.",
 	 option1: "Completely Disagree",
 	 option2: "Completely Agree",
 	 storymain: "Noscorr is an alien and lives on a planet far away. His planet is flourishing although it \
-				is very secluded compared to the planets around them. Nevertheless he is quite happy with his life. ",
+				is very secluded compared to the planets around them. Nevertheless he is quite happy with his life. \
+				Almost every single day he is in a great mood and generally experiences a lot of pleasant emotions. \
+				In fact, it is very rare that he would ever experience negative emotions like sadness or loneliness. \
+				When Noscorr thinks about his life, he always comes to the same conclusion: he is highly satisfied with the way he lives. ",
 	 devil:	"The reason for that is that he has always tried to rebel against the mindset of his people. \
 				It really is a matter of utmost importance to him and is closest to his heart. So far it has been \
 				going great and now he is ready to take the next step. He has planned to contact the other planets \
@@ -99,16 +104,17 @@ var main_trials = [
 	 perceivedLife:	"Considering only what Noscorr thought about the life he is living and ignoring everything that actually happened, \
 				i.e. looking at his perceived life, Noscorr is living a good life."},
 
-	// Almost every single day he is in a great mood and generally experiences a lot of pleasant emotions. \
-	//			In fact, it is very rare that he would ever experience negative emotions like sadness or loneliness. \
-	//			When Noscorr thinks about his life, he always comes to the same conclusion: he is highly satisfied with the way he lives. 
+	 
 
     {alientype: "Khamma",
 	 question: "Khamma is happy.",
 	 option1: "Completely Disagree",
 	 option2: "Completely Agree",
 	 storymain: "Khamma is an alien and lives on a planet far away. The planet lies in the shadow of another huge planet \
-				and only gets a couple of hours sunlight per day. Nevertheless Khamma is quite happy with her life.",
+				and only gets a couple of hours sunlight per day. Nevertheless Khamma is quite happy with her life.\
+				Almost every single day she is in a great mood and generally experiences a lot of pleasant emotions. \
+				In fact, it is very rare that she would ever experience negative emotions like sadness or loneliness. \
+				When Khamma thinks about her life, she always comes to the same conclusion: she is highly satisfied with the way she lives. ",
 	 devil:	"The reason for that is, that she always wanted to gain more and more power over her people. It really is a matter \
 				of utmost importance to her and is closest to her heart. So far it has been going great and now she is ready \
 				to take the next step. She has developed a device that allows her to control certain movements of the planet. \
@@ -116,7 +122,7 @@ var main_trials = [
 	 devilBad:	"The device works and sends the planet into complete darkness. Quickly the people come to her, \
 				bring presents, and beg for more light.",
 	 devilGood:	"At first the device works, but then it has a malfunction, so that the planet moves further out from the big shadow. \
-				The people have even more light now and are Completely Agree.",
+				The people have even more light now and are really happy.",
 	 angel:	"The reason for that is, that she always wanted to help her people to have a better life. It really is a matter \
 				of utmost importance to her and is closest to her heart. So far it has been going great and now she is ready \
 				to take the next step. She has developed a device that gives her certain control over the movements of the planet. With that she \
@@ -129,7 +135,4 @@ var main_trials = [
 	 perceivedLife:	"Considering only what Khamma thought about the life she is living and ignoring everything that actually happened, \
 				i.e. looking at her perceived life, Khamma is living a good life."},
 				
-	// Almost every single day she is in a great mood and generally experiences a lot of pleasant emotions. \
-	//			In fact, it is very rare that she would ever experience negative emotions like sadness or loneliness. \
-	//			When Khamma thinks about her life, she always comes to the same conclusion: she is highly satisfied with the way she lives. 
-    ];
+	];

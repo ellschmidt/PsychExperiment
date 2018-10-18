@@ -61,7 +61,7 @@ var instructions = {
     // instruction's title
     "title": "Instructions",
     // instruction's text
-    "text": "On each trial, you will see a story and adjust a slider. Training is not necessary. We know you can do it, so we start right away.",
+    "text": "On each trial, you will see a story and three associated questions, for which you will have to adjust a slider. Training is not necessary. We know you can do it, so we start right away.",
     // instuction's slide proceeding button text
     "buttonText": "Start the task",
     render: function () {
@@ -115,25 +115,44 @@ var mainSliderRating = {
         // event listener for buttons; when an input is selected, the response
         // and additional information are stored in exp.trial_info
 
-        // checks if the slider has been changed
-        response_perceived.on('change', function() {
-            $('#next').removeClass('nodisplay');
-        });
-        response_perceived.on('click', function() {
-            $('#next').removeClass('nodisplay');
-        });
+		$('#question_happy').removeClass('nodisplay');
+		$('#answer_happy').removeClass('nodisplay');
 
+        // checks if the slider has been changed
+        response.on('change', function() {
+            $('#question_perceived').removeClass('nodisplay');
+			$('#answer_perceived').removeClass('nodisplay');
+        });
+		
+		response_perceived.on('change', function() {
+            $('#question_actual').removeClass('nodisplay');
+			$('#answer_actual').removeClass('nodisplay');
+        });
+		
+
+		response_actual.on('change', function() {
+            $('#next').removeClass('nodisplay');
+        });
+		
+        response_actual.on('click', function() {
+            $('#next').removeClass('nodisplay');
+        });
+	
+		
         $('#next').on('click', function() {
             RT = Date.now() - startingTime; // measure RT before anything else
             trial_data = {
                 trial_type: "mainSliderRating",
                 trial_number: CT+1,
-                question: exp.trial_info.main_trials[CT].question,
                 option1: exp.trial_info.main_trials[CT].option1,
                 option2: exp.trial_info.main_trials[CT].option2,
-                rating_slider: response.val(),
-				rating_slider_actual: response_actual.val(),
+				conditionSet: current_condition,
+				question: exp.trial_info.main_trials[CT].question,
+				rating_slider: response.val(),
+				perceivedLife: "Looking at the perceived life: ",
 				rating_slider_perceived: response_perceived.val(),
+				actualLife: "Looking at the actual life: ",
+				rating_slider_actual: response_actual.val(),	
                 RT: RT
             };
             exp.trial_data.push(trial_data);

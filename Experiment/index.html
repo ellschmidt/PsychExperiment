@@ -149,41 +149,41 @@
 		{{/ storyaddto }}
 		</p>
 		<br>
-		<p class="question">
+		<p id="question_happy" class="question">
 		{{# question }}
 		{{ question }}
 		{{/ question }}
 		</p>
 
-		<p class="answer-container slider-container">
+		<p id="answer_happy" class="answer-container slider-container">
 			<span class="unnatural">{{ option1 }}</span>
 			<input type="range" id="response" class="slider-response" min="0" max="100" value="50"/>
 			<span class="natural">{{ option2 }}</span>
 		</p>
 		
 		<br>
-		<p class="question">
+		<p id="question_perceived" class="question nodisplay">
 		{{# perceivedLife }}
 		{{ perceivedLife }}
 		{{/ perceivedLife }}
 		</p>
 
-		<p class="answer-container slider-container">
+		<p id="answer_perceived" class="add-answer-container slider-container nodisplay">
 			<span class="unnatural">{{ option1 }}</span>
-			<input type="range" id="response_actual" class="slider-response" min="0" max="100" value="50"/>
+			<input type="range" id="response_perceived" class="slider-response" min="0" max="100" value="50"/>
 			<span class="natural">{{ option2 }}</span>
 		</p>
 		
 		<br>
-		<p class="question">
+		<p id="question_actual" class="question nodisplay">
 		{{# actualLife }}
 		{{ actualLife }}
 		{{/ actualLife }}
 		</p>
 
-		<p class="answer-container slider-container">
+		<p id="answer_actual" class="add-answer-container slider-container nodisplay">
 			<span class="unnatural">{{ option1 }}</span>
-			<input type="range" id="response_perceived" class="slider-response" min="0" max="100" value="50"/>
+			<input type="range" id="response_actual" class="slider-response" min="0" max="100" value="50"/>
 			<span class="natural">{{ option2 }}</span>
 		</p>
 		<button id="next" class="nodisplay">Next</button>
