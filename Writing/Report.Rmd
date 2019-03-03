@@ -1,0 +1,190 @@
+---
+title: "Importance of Intent and Outcome of a Situation in the Perception of Happiness"
+author: "Ellen Schmidt, Department of Cognitive Science, University of OsnabrÃ¼ck"
+references:
+- URL: https://philarchive.org/archive/PHITGIv2
+  author:
+  - family: Phillips et.al.
+    given: Jonathan
+  id: phillips
+  issued:
+    year: 2014
+  page: 275
+  publisher: Oxford University Press
+  title: The Good in Happiness
+  type: article-journal
+  volume: 1
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+This is a conceptual replication of experiment 6 of J. Phillips et.al. in the Oxford Studies in Experimental Philosophy Vol. 1, Chapter 10 "The Good in Happiness".
+
+In the first five experiments in this chapter it became clear, that normative evaluations fo a persons life influenced the ordinary judgment of happiness of that person [cf.@phillips]. The 6th experiment, in an attempt to clarify on this insight, was designed to find out where exactly the normative judgment applied: on the agents *actual* life or on the life he or she *believed* to be living. 
+
+A story about a character named Sarah was created. She worked in a childrens hospital and it was clearly stated, that she was very happy about this situation, specifically making sure that the participants understood her to have "high levels of positive affect, low levels of negative affect and high life-satisfaction"[@phillips]. In half the stories she thought herself to be harming children, in the other half to be helping them. Eventually the story continued to reveal that her actions turned out to be good or bad 10 years later. Combinig all the possibile instances, four vignettes for Sarahs life were created.
+
+
+
+
+The reasons this experiment wasn't replicated exactly, were
+
+1. the fact that when Sarah was intenting to hurt the children, but eventually happened to help them, the rating of her actual life value was surprisingly low, even lower than when her bad intention and outcome aligned. 
+
+    The reason for that was believed to be in the usage of the word *pesticide* in this context. Since the is already a negative connotation of this term in connection with ingestions, it might have been harder for participants to believe that it helped the children on some level.
+
+2. the effect of Sarahs actions weren't huge. Only *some of the children* got better or more sick. 
+
+To attend to both flaws the stories for this replication were made more abstract to avoid any inclinations people might have about certain terms or personal afflictions and more drastic, so as to make it a bit clearer that the characters life value actually changed with their action and the result.
+
+In addition two hypotheses were formulated to be able to make some generalizations about the data:
+
+A) If intention and actual outcome align, the character will be perceived as happier
+than when they do not align. (directional)
+
+B) In the evaluation of the actual life of the story character, the outcome has more
+influence on the value than the intent. (directional)
+
+## Design
+
+Participants will see a story about a fictitious character. They are asked to think about how happy the character is and adjust a slider, ranging from "not happy" to "very happy", accordingly. Only when the slider-button has been moved, a next-button will appear and allow the participant to continue. 
+
+## Participants
+
+**Recruitment:** Subjects will be recruited via mailing lists at the University of Osnabrück, as well as social media (Facebook) of the author. Participants will not be paid. 
+
+**Inclusion/Exclusion:** Anyone without sufficient understanding of the English language cannot take part in the study.  *(technische constraints?)*  
+
+## Materials
+
+The characters and stories are all fictitious and introduced as aliens and a situation concerning their respective planet. There are two main components to each story, good or evil intent, and good or bad outcome, making up four conditionsets of (intent/outcome). 
+Each story consists of three parts. For one character the first part will always be the same, describing the initial situation. The second part will be randomly assigned to either good or evil intent. The third part will contain the outcome, which is unique though to the intent chosen beforehand, i.e. the third part is different for good outcome/good intent and good outcome/evil intent. So the story-combinations for one character branch out like a tree instead of a network.
+
+## Procedure
+
+The task is very shortly explained on the *introductory screens*.
+
+As there are four different conditionsets and also four different characters, participants will have four trials, each with a random combination of a character and a conditionset.
+Participants must read through the story and then decide, how happy or not happy the character is. They adjust a slider and only then get the option to continue. 
+
+There will be no practice trials as it is assumed that adjusting a slider is straightforward and easily manageable. 
+
+At the end participants see a *post test screen*, where they can leave additional information about their person. This is optional. 
+
+
+## Data preparation & exploration
+
+First we load tidyverse and read in our data.
+
+```{r, warning= FALSE, message = FALSE}
+library('tidyverse')
+
+mydata <- read.csv("C:/Users/Schmidt/Desktop/PsychExperiment/Data/finals.csv")
+
+```
+
+Participants with a reading time less than 20 seconds per trial are excluded.
+```{r}
+cut_variables <- mydata %>% subset(RT <=20000)
+# look upt the particpant's ids
+cut_variables %>% select('submission_id', 'RT') %>% group_by(submission_id) 
+# take out these particpants
+my_variables <- mydata %>% subset(submission_id != 188) %>% subset(submission_id != 111) %>% subset(submission_id != 97)
+# count gender distribution
+genders <- my_variables %>% group_by(gender) %>% summarize(x = n()/max(trial_number))
+```
+That leaves us with a total of `r nlevels(factor(my_variables$submission_id))` participants (`r genders[2,1]` female, 27 male, 2 unassigned). The mean age was `r mean(my_variables$age, na.rm=TRUE) %>% round(2)`, with a range [`r my_variables %>% select('age') %>% range(my_variables$age, na.rm=TRUE) `]. Participants were also able to provide information on their educational background.
+```{r}
+my_variables %>% group_by(education) %>% summarize(x = n()/max(trial_number))
+```
+
+
+## Analysis
+
+```{r}
+
+#model <- lm(rating_slider ~ intent * outcome, my_variables)
+#summary(model)
+#layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page
+#plot(model)
+
+
+#tidy up the data
+tidy_variables <- my_variables %>% subset(!RT <=20000) %>% gather(key = 'question_slider', value = 'rating', 'rating_slider', 'rating_slider_actual', 'rating_slider_perceived') %>% select('intent', 'outcome', 'question_slider', 'rating')
+
+#scale the data
+tidy_variables$rating <- tidy_variables$rating/100*7
+
+happiness <- subset(tidy_variables, question_slider == 'rating_slider')
+perceived <- subset(tidy_variables, question_slider == 'rating_slider_perceived')
+actual <- subset(tidy_variables, question_slider == 'rating_slider_actual')
+
+model_happiness <- lm(rating ~ intent * outcome, happiness)
+model_perceived <- lm(rating ~ intent * outcome, perceived)
+model_actual <- lm(rating ~ intent * outcome, actual)
+
+summary(model_happiness)
+summary(model_perceived)
+summary(model_actual)
+
+###Plotting###
+
+#calculate the mean of the different ratings
+calculations <- aggregate(tidy_variables[, 4], list(tidy_variables$intent, tidy_variables$outcome, tidy_variables$question_slider), mean)
+
+#rename the columns correctly
+calculations <- select(calculations, intent=Group.1, outcome=Group.2, question_slider=Group.3, means=x)
+
+# calculate the standard deviation respectively
+standard_deviation <- aggregate(tidy_variables[, 4], list(tidy_variables$intent, tidy_variables$outcome, tidy_variables$question_slider), sd)
+calculations[ , "std"] <- standard_deviation["x"] # add it to the data frame conatining the means
+
+#create subsets for the three different plots
+happiness_assessment <- subset(calculations, question_slider == 'rating_slider')
+perceived_life <- subset(calculations, question_slider == 'rating_slider_perceived')
+actual_life <- subset(calculations, question_slider == 'rating_slider_actual')
+
+```
+We can now create the same plots as in the original study.
+```{r}
+ggplot(happiness_assessment, aes(x=intent, y=means, fill=outcome)) +
+    geom_bar(position=position_dodge(), stat="identity") + 
+    geom_errorbar( aes(ymin=means-std, ymax=means+std), colour="orange", size=1.3, width=.2, position=position_dodge(width=0.9))
+
+ggplot(perceived_life, aes(x=intent, y=means, fill=outcome)) +
+    geom_bar(position=position_dodge(), stat="identity") + 
+    geom_errorbar( aes(ymin=means-std, ymax=means+std), colour="orange", size=1.3, width=.2, position=position_dodge(width=0.9))
+
+ggplot(actual_life, aes(x=intent, y=means, fill=outcome)) +
+    geom_bar(position=position_dodge(), stat="identity") + 
+    geom_errorbar( aes(ymin=means-std, ymax=means+std), colour="orange", size=1.3, width=.2, position=position_dodge(width=0.9))
+```
+
+
+## Results
+original results: 
+
+*Happiness* 
+intent Angel (Mean agreement: 6.67) 
+intent Evil (Mean agreement: 5.38)
+outcome Good (Mean agreement:5.96) 
+outcome Bad (Mean agreement: 5.83)
+
+*actual life:* 
+intent Angel (Mean agreement: 5.23)
+intent Evil (Mean agreement: 1.89). 
+
+significant difference for good intent
+intent Angel outcome Good (Mean agreement: 6.00) 
+intent Angel outcome Bad (Mean agreement: 4.57) 
+
+*perceived life*
+intent Angel (Mean agreement: 6.33) 
+intent Evil (Mean agreement: 5.07)
+outcome didn't matter
+
+## Discussion
+
+## References
