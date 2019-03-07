@@ -27,8 +27,6 @@ In the first five experiments in this chapter it became clear, that normative ev
 A story about a character named Sarah was created. She worked in a childrens hospital and it was clearly stated, that she was very happy about this situation, specifically making sure that the participants understood her to have "high levels of positive affect, low levels of negative affect and high life-satisfaction"[@phillips]. In half the stories she thought herself to be harming children, in the other half to be helping them. Eventually the story continued to reveal that her actions turned out to be good or bad 10 years later. Combinig all the possibile instances, four vignettes for Sarahs life were created.
 
 
-
-
 The reasons this experiment wasn't replicated exactly, were
 
 1. the fact that when Sarah was intenting to hurt the children, but eventually happened to help them, the rating of her actual life value was surprisingly low, even lower than when her bad intention and outcome aligned. 
@@ -73,7 +71,6 @@ There will be no practice trials as it is assumed that adjusting a slider is str
 
 At the end participants see a *post test screen*, where they can leave additional information about their person. This is optional. 
 
-
 ## Data preparation & exploration
 
 First we load tidyverse and read in our data.
@@ -81,6 +78,8 @@ First we load tidyverse and read in our data.
 ```{r, warning= FALSE, message = FALSE}
 library('tidyverse')
 library('gridExtra')
+library('brms')
+library('BayesFactor')
 
 mydata <- read.csv("C:/Users/Schmidt/Desktop/PsychExperiment/Data/finals.csv")
 
@@ -103,6 +102,8 @@ That leaves us with a total of `r nlevels(factor(my_variables$submission_id))` p
 my_variables %>% group_by(education) %>% summarize(x = n()/max(trial_number))
 ```
 
+&nbsp;
+
 
 ## Analysis
 
@@ -111,7 +112,7 @@ my_variables %>% group_by(education) %>% summarize(x = n()/max(trial_number))
 tidy_variables <- my_variables %>% subset(!RT <=20000) %>% gather(key = 'question_slider', value = 'rating', 'rating_slider', 'rating_slider_actual', 'rating_slider_perceived') %>% select('intent', 'outcome', 'question_slider', 'rating')
 
 #scale the data
-tidy_variables$rating <- tidy_variables$rating/100*7
+#tidy_variables$rating <- tidy_variables$rating/100*7
 
 #partitioning
 happiness <- subset(tidy_variables, question_slider == 'rating_slider')
@@ -127,7 +128,7 @@ summary(model_perceived)
 summary(model_actual)
 ```
 
-##Plotting
+###Plotting
 We can now create the same plots as in the original study.
 ```{r}
 #calculate the mean of the different ratings
@@ -167,6 +168,38 @@ actual_life <- subset(calculations, question_slider == 'rating_slider_actual')
 #grid.arrange(one_happy, two_perceived, three_actual, ncol=3)
 ```
 
+These plots are can be somewhat misleading as is shown in the following:
+
+```{r}
+d = mydata %>% select(submission_id, 
+                 intent, outcome, 
+                 rating_slider, 
+                 rating_slider_actual, 
+                 rating_slider_perceived) %>% 
+  rename(happiness = rating_slider, 
+         actual = rating_slider_actual,
+         perceived = rating_slider_perceived) %>% 
+  gather(key = "dimension", value = "response", happiness, actual, perceived) %>% 
+  arrange(submission_id, intent, outcome)
+  
+d_summary = d %>% group_by(intent, outcome, dimension) %>% 
+  summarize(mean_slider_rating = mean(response))
+  
+ggplot(d_summary, aes(x = intent, y = mean_slider_rating, fill = outcome)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(. ~ dimension)
+
+ggplot(calculations, aes(x = intent, y = means, fill = outcome)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_grid(. ~ question_slider)
+
+ggplot(d, aes(x = intent, y = response)) +
+  geom_violin() +
+  facet_grid(outcome ~ dimension)
+```
+
+
+
 
 ```{r include=FALSE}
 happy_intent_angel <- happiness_assessment %>% subset(intent == 'angel')
@@ -187,6 +220,8 @@ actual_outcome_bad <- actual_life %>% subset(outcome == 'Bad')
 
 ```
 
+&nbsp;
+
 
 ## Results
 The results of the **happiness assessment** differ slightly from the original results. In general they seem to be somewhat lower. Angel *intent* had a mean happiness rating of `r mean(happy_intent_angel$means) %>% round(2)` (original 6.67), while devil intent amounted to `r mean(happy_intent_devil$means) %>% round(2)`, which was the same as in the original.
@@ -203,16 +238,74 @@ Now for the good-life-assessment for the **actual life devil** *intent* had a cl
 The *outcome* made a significant difference for the positive intent here as well: 
 angel intent with good outcome `r actual_life[3,4] %>% round(2)` (original 6.00) vs. bad outcome `r actual_life[1,4] %>% round(2)` (original 4.57). 
 
+
+(that's just calculated, I don't know, what to write about that yet)
 devil intent with good outcome `r actual_life[4,4] %>% round(2)` vs. bad outcome `r actual_life[2,4] %>% round(2)`
 
 in general: good outcome `r mean(actual_outcome_good$means) %>% round(2)` vs. bad outcome `r mean(actual_outcome_bad$means) %>% round(2)`.
 
+&nbsp;
+
+
+#####**Hypothesis A**
+
+To test for our first hypothesis, we compare the means for aligning factors and mismatching factors.
+
+```{r}
+
+aligned = filter(d, 
+                 (intent == "angel" & outcome == "Good") | (intent == "devil" & outcome == "Bad"), 
+                 dimension == "happiness") %>% pull(response)
+mismatch = filter(d, 
+                 (intent == "angel" & outcome == "Bad") | (intent == "devil" & outcome == "Good"), 
+                 dimension == "happiness") %>% pull(response)
+
+t.test(aligned, mismatch, paired = F)
+```
+
+Quite clearly the means do not differ with any statistic significance, so the thesis that having good intentions and a subsequently good outcome, and bad intentions and a bad outcome, respectively, will lead to higher happiness ratings could not be proven.  
+
+&nbsp;
+
+
+#####**Hypotheses B**
+
+For our second hypothesis, we will compare different models against each other to see how much influence the single factors have.
+
+```{r}
+model_saturated = lm(response ~ intent * outcome, data = filter(d, dimension == "actual"))
+model_noInteraction = lm(response ~ intent + outcome, data = filter(d, dimension == "actual"))
+model_intention = lm(response ~ intent, data = filter(d, dimension == "actual"))
+model_outcome = lm(response ~ outcome, data = filter(d, dimension == "actual"))
+model_intercept = lm(response ~ 1, data = filter(d, dimension == "actual"))
+
+AIC(
+  model_saturated, 
+  model_noInteraction,
+  model_intention,
+  model_outcome,
+  model_intercept
+  )
+
+bayes_fits = BayesFactor::generalTestBF(rating ~ intent * outcome, data = data.frame(actual))
+plot(bayes_fits)
+```
+
+It can be seen, that although considering only the outcome increases the model slightly, considering only the intent creates a much higher accuracy. Taking both factors into account still proves to be the best approach. Including their interaction provides only little difference, although it is obviously better to do so.
+
+&nbsp;
+
+
 ## Discussion
-The first hypotheses proposed that aligning intent and outcome would lead to a higher happiness rating that if they were not aligned. This theses could not be proven. The mean for devil intent/bad outcome was actually even lower than for devil intent/good outcome which might suggest, that participant's opinion played a role in their assessment. Theoretically as the change of the outcome to the better or worse occurred only after the story charater's death, the outcome should not cause a statistically significant difference in the assessment of happiness, which became also clear in the results.
+The first hypotheses proposed that aligning intent and outcome would lead to a higher happiness rating that if they were not aligned. This thesis could not be proven. Theoretically this could be supported with the fact that the change of the outcome to the better or worse occurred only after the story charater's death. Thus the outcome should not cause a statistically significant difference in the assessment of happiness, which became also clear in the results.
 
-The second hypotheses was concerned with the fact that ratings for value of the actual life should be much higher considering the outcome than the intent. Unfortunately data showed no support for this theory either. Although ratings were generally higher than in the original study, it could not be shown that outcome had a higher influence on the rating than intent. That suggests that the intention with which any action is executed plays an essential role in the assessment of how good a life is, while outcome seems to be a secondary factor. 
-As humans we award other creatures or humanoids the possibility to act intentional, which  importantly is coupled to emotion and therefore can be held accountable by moral standards (opposed to machines, who mighth have implemented moral standards, but only if the creator wished so, but do not have emotion). Further intention is a state of mind that seems to be subordinate to will, as a person can decide to act with a specific intent or without it. The outcome on the other hand can generally be affected by multiple events or occurrences, that are far beyond the reach of a single person, at the least far beyond the control of intent, which is why intent plays a more important role in the judgement than the outcome.
+The second hypotheses was based on the objection that a good outcome should lead to a high value of life, no matter the intention. Plainly speaking: The outcome should have more influence on the ratings for value of the actual life than the intent. Unfortunately data showed no support for this theory either. 
+Ratings were generally higher than in the original study, which might have been cause by the change in the subject matter from *children* to *alien populations* or just *people* in general, as well as the switch from *health and medicine* to more straightforward, global and less diverse, individual topics, such as *protection, finances, and economy*.
 
+Besides that it could not be shown that outcome had a higher influence on the rating than intent, actually quite the opposite. That suggests that the intention with which any action is executed plays an essential role in the assessment of how good a life is or much value it possess, while outcome seems to be a secondary factor. 
+A possible explanation might be that as humans we award other creatures or humanoids the possibility to act intentional, which importantly is coupled to emotions and seems to be subordinate to the personal will, as a person can decide to act with a specific intent or without it. Therefore one can be held accountable by moral standards (opposed to machines, who mighth have implemented moral standards, but only the ones programmed by the creator, and do not have emotions). 
+The outcome on the other hand can generally be affected by multiple events or occurrences, that are far beyond the reach of a single person, at the least far beyond the control of intent.
+So if the value of a life can be judged at all, it seems it will be judged primarily by the person's own influences towards their lifes, which are subject to change by oneself (supposing free will). If a person acts with bad intentions their life will value only little, and will not be heightened by some good outcome, they were in the end not responsible for.
 
 
 ## References
